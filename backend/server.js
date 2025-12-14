@@ -1,11 +1,20 @@
-require("dotenv").config();
-const express = require("express");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import taskRoutes from "./routes/Tasks.js";
+import sessionRoutes from "./routes/Sessions.js";
+/*const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");*/
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
@@ -14,9 +23,6 @@ mongoose
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((error) => console.error("❌ Error:", error));
 
-// Import models
-const Task = require("./models/Task");
-const Session = require("./models/Session");
 
 // Root route
 app.get("/", (req, res) => {
@@ -30,6 +36,11 @@ app.get("/", (req, res) => {
   });
 });
 
+// Routes
+app.use("/api/tasks", taskRoutes);
+app.use("/api/sessions", sessionRoutes);
+
+/*
 // TODO: Add your Task routes here
 // POST /api/tasks
 app.post("/api/tasks", async(req, res) => {
@@ -130,7 +141,7 @@ app.get("/api/sessions", async(req, res) => {
   } catch (error) {
     res.status(500).json({error: error.message});
   }
-})
+}) */
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
